@@ -3,15 +3,14 @@ package org.foppiano.uima.fit.tutorial.casConsumer;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.annotator.WhitespaceTokenizer;
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.CASException;
-import org.apache.uima.cas.FSIndex;
-import org.apache.uima.cas.TypeSystem;
+import org.apache.uima.cas.*;
 import org.apache.uima.fit.component.CasConsumer_ImplBase;
 import org.apache.uima.fit.component.JCasAnnotator_ImplBase;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.factory.TypeSystemDescriptionFactory;
 import org.apache.uima.fit.type.Sentence;
+import org.apache.uima.fit.util.CasUtil;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Level;
@@ -56,7 +55,10 @@ public class SimpleCC extends JCasAnnotator_ImplBase {
 
         String name = UUID.randomUUID().toString();
 
-        logger.log(Level.ALL, "Mbaaaaa");
+        Type tokens = JCasUtil.getAnnotationType(jcas, "org.apache.uima.TokenAnnotation");
+        Type sentences = JCasUtil.getAnnotationType(jcas, "org.apache.uima.SentenceAnnotation");
+
+
 
         try {
             File outputDir = new File(outputDirectory+"/"+name);
