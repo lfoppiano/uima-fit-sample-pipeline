@@ -31,7 +31,7 @@ public class App {
         //new PathMatchingResourcePatternResolver().getResources("classpath*:META-INF/org.apache.uima.fit/types.txt");
 
         TypeSystemDescription tsd = TypeSystemDescriptionFactory.createTypeSystemDescription();
-        TypeDescription[] types = tsd.getTypes();
+        //TypeDescription[] types = tsd.getTypes();
 
 
         CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(SimpleCR.class,
