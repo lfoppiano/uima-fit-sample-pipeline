@@ -55,7 +55,7 @@ public class SimpleCC extends CasAnnotator_ImplBase {
 
 
         CAS sofaText = cas.getView(SimpleParserAE.SOFA_NAME_TEXT_ONLY);
-        onlyText = cas.getDocumentText();
+        onlyText = sofaText.getDocumentText();
 
         String name = UUID.randomUUID().toString();
 
@@ -65,11 +65,12 @@ public class SimpleCC extends CasAnnotator_ImplBase {
         Type sentenceAnnotation = CasUtil.getType(sofaText, "org.apache.uima.SentenceAnnotation");
         Collection<AnnotationFS> sentences = CasUtil.select(sofaText, sentenceAnnotation);
 
-        String textWithSentenceAnnotation = mergeTextAndAnnotation(onlyText, sentences);
-        String textWithTokenAnnotation = mergeTextAndAnnotation(onlyText, tokens);
-
         Type dictionaryAnnotation = CasUtil.getType(sofaText, "org.apache.uima.DictionaryEntry");
         Collection<AnnotationFS> dictionaryAnnotations = CasUtil.select(sofaText, dictionaryAnnotation);
+
+        String textWithSentenceAnnotation = mergeTextAndAnnotation(onlyText, sentences);
+        String textWithTokenAnnotation = mergeTextAndAnnotation(onlyText, tokens);
+        String textWithDictionaryAnnotation = mergeTextAndAnnotation(onlyText, dictionaryAnnotations);
 
         try {
             File outputDir = new File(outputDirectory + "/" + name);
@@ -88,9 +89,9 @@ public class SimpleCC extends CasAnnotator_ImplBase {
             pw.println("TEXT - TOKENS");
             pw.println("Tokens: " +tokens.size());
             pw.println(textWithTokenAnnotation);
-
-
-
+            pw.println("TEXT - DICTIONARY");
+            pw.println("Tokens: " +dictionaryAnnotations.size());
+            pw.println(textWithDictionaryAnnotation);
 
             pw.close();
         } catch (FileNotFoundException e) {
