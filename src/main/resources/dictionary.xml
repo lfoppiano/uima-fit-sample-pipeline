@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionary xmlns="http://incubator.apache.org/uima" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="dictionary.xsd">
+<typeCollection>
+<dictionaryMetaData caseNormalization="true" multiWordEntries="true" multiWordSeparator=","/>
+<typeDescription>
+<typeName>org.apache.uima.DictionaryEntry</typeName>
+</typeDescription>
+<entries>
+<entry>
+<key>train, Amtrak, boat train, bullet train, cable railway, Eurostar, express, freightliner, freight train, funicular, intercity</key>
+</entry>
+<entry>
+<key>tires, car, motion, bald, cartwheel, flange, flat, grip, hub, hubcap, inner tube, radial</key>
+</entry>
+<entry>
+<key>vehicle, ride, car, motor car, motor, auto, automobile, wheels</key>
+</entry>
+<entry>
+<key>bone structure, brow, cheek, chin, complexion, crease, crow’s feet, dimple, eye, eye socket</key>
+</entry>
+<entry>
+<key>spring, autumn, autumnal, British Summer Time, BST, daylight saving time, the Dry, equinox, fall, the midnight sun, midsummer, artesian well, beck, brook, burn, canal, creek, feeder, geyser, hot spring, river</key>
+</entry>
+</entries>
+</typeCollection>
+</dictionary>

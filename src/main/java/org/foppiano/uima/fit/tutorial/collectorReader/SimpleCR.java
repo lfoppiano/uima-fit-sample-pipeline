@@ -31,9 +31,9 @@ import java.util.List;
  */
 public class SimpleCR extends CollectionReader_ImplBase {
 
-    public final static String SOURCE_FILE_PARAM = "sourceFile";
+    public final static String PARAM_SOURCE_FILE = "sourceFile";
     List<String> inputUrls = null;
-    @ConfigurationParameter(name = SOURCE_FILE_PARAM)
+    @ConfigurationParameter(name = PARAM_SOURCE_FILE)
 
     private String sourceFile;
     private Integer index = 0;
@@ -81,7 +81,6 @@ public class SimpleCR extends CollectionReader_ImplBase {
         System.out.println("Querying " + url);
 
         HttpEntity entity = response.getEntity();
-
 
         String responseText = new String(IOUtils.toByteArray(entity.getContent()));
 
