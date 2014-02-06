@@ -2,7 +2,6 @@ package org.foppiano.uima.fit.tutorial;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
-import org.apache.uima.annotator.WhitespaceTokenizer;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.conceptMapper.ConceptMapper;
@@ -49,24 +48,34 @@ public class Pipeline2 {
 
         AnalysisEngineDescription offsetTokenizer = AnalysisEngineFactory.createEngineDescription(
                 OffsetTokenizer.class,
-                OffsetTokenizer.PARAM_CASE_MATCH, "false"/*,
+                OffsetTokenizer.PARAM_CASE_MATCH, "ignoreall"/*,
                 OffsetTokenizer.PARAM_TOKEN_DELIM, "/-*&amp;@(){}|[]&gt;&lt;\\'`\":;,$%+.?!"*/
         );
 
-                                     /*
+        File tmpTokenizerDescription = File.createTempFile("prefffix_", "_suffix");
+        tmpTokenizerDescription.deleteOnExit();
+
+        try {
+            offsetTokenizer.toXML(new FileWriter(tmpTokenizerDescription));
+        } catch (SAXException e) {
+
+        }
+
         AnalysisEngineDescription conceptMapper = AnalysisEngineFactory.createEngineDescription(
                 ConceptMapper.class,
-                "TokenizerDescriptorPath", .getAbsolutePath(),
+                "TokenizerDescriptorPath", tmpTokenizerDescription.getAbsolutePath(),
                 "LanguageID", "en",
-                ConceptMapper.PARAM_TOKENANNOTATION, "org.apache.uima.TokenAnnotation",
-                "SpanFeatureStructure", "org.apache.uima.SentenceAnnotation",
-                ConceptMapper.PARAM_FEATURE_LIST, new String[]{""},
-                ConceptMapper.PARAM_ATTRIBUTE_LIST, new String[]{""}
-        );                         */
+                ConceptMapper.PARAM_TOKENANNOTATION, "uima.tt.TokenAnnotation",
+                ConceptMapper.PARAM_ANNOTATION_NAME, "org.apache.uima.conceptMapper.DictTerm",
+                "SpanFeatureStructure", "uima.tcas.DocumentAnnotation",
+                ConceptMapper.PARAM_FEATURE_LIST, new String[]{"DictCanon"},
+                ConceptMapper.PARAM_ATTRIBUTE_LIST, new String[]{"canonical"}
+        );
 
         AggregateBuilder builder = new AggregateBuilder();
         builder.add(preparationEngine, SimpleParserAE.SOFA_NAME_TEXT_ONLY, "newSofa");
         builder.add(offsetTokenizer, CAS.NAME_DEFAULT_SOFA, "newSofa");
+        builder.add(conceptMapper, CAS.NAME_DEFAULT_SOFA, "newSofa");
         builder.add(casConsumer, SimpleParserAE.SOFA_NAME_TEXT_ONLY, "newSofa");
 
         SimplePipeline.runPipeline(reader, builder.createAggregateDescription());
