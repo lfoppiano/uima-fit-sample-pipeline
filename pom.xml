@@ -34,7 +34,7 @@
         </dependency>
 
 
-        <!-- ANnotators -->
+        <!-- Annotators -->
         <dependency>
             <groupId>org.apache.uima</groupId>
             <artifactId>DictionaryAnnotator</artifactId>
@@ -47,6 +47,12 @@
             <version>2.3.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>ConceptMapper</artifactId>
+            <version>2.3.2-SNAPSHOT</version>
+        </dependency>
+
 
         <!-- Testing -->
         <dependency>

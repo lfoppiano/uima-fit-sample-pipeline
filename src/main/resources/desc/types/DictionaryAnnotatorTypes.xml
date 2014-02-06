@@ -11,18 +11,6 @@
             <description/>
             <supertypeName>uima.tcas.Annotation</supertypeName>
         </typeDescription>
-        <typeDescription>
-            <name>org.apache.uima.TokenAnnotation</name>
-            <description>Single token annotation</description>
-            <supertypeName>uima.tcas.Annotation</supertypeName>
-            <features>
-                <featureDescription>
-                    <name>tokenType</name>
-                    <description>token type</description>
-                    <rangeTypeName>uima.cas.String</rangeTypeName>
-                </featureDescription>
-            </features>
-        </typeDescription>
     </types>
 
 </typeSystemDescription>
