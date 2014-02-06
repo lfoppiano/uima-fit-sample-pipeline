@@ -35,9 +35,13 @@ import java.util.UUID;
 public class SimpleCC extends CasAnnotator_ImplBase {
 
     public final static String PARAM_OUTPUT_DIR = "outputDir";
-    List<String> inputUrls = null;
     @ConfigurationParameter(name = PARAM_OUTPUT_DIR)
     private String outputDirectory;
+
+    public final static String PARAM_ANNOTATION_TYPES = "annotationTypes";
+    @ConfigurationParameter(name = PARAM_ANNOTATION_TYPES)
+    private List<String> annotationTypes;
+
     private Logger logger;
 
     @Override
@@ -59,21 +63,11 @@ public class SimpleCC extends CasAnnotator_ImplBase {
 
         String name = UUID.randomUUID().toString();
 
-        Type tokenAnnotation = CasUtil.getType(sofaText, "org.apache.uima.TokenAnnotation");
-        Collection<AnnotationFS> tokens = CasUtil.select(sofaText, tokenAnnotation);
-
-        Type sentenceAnnotation = CasUtil.getType(sofaText, "org.apache.uima.SentenceAnnotation");
-        Collection<AnnotationFS> sentences = CasUtil.select(sofaText, sentenceAnnotation);
-
-        Type dictionaryAnnotation = CasUtil.getType(sofaText, "org.apache.uima.DictionaryEntry");
-        Collection<AnnotationFS> dictionaryAnnotations = CasUtil.select(sofaText, dictionaryAnnotation);
-
-        String textWithSentenceAnnotation = mergeTextAndAnnotation(onlyText, sentences);
-        String textWithTokenAnnotation = mergeTextAndAnnotation(onlyText, tokens);
-        String textWithDictionaryAnnotation = mergeTextAndAnnotation(onlyText, dictionaryAnnotations);
+        Iterator<String> annotationTypesIterator = annotationTypes.iterator();
 
         try {
-            File outputDir = new File(outputDirectory + "/" + name);
+            File outputDir = new File(this.outputDirectory + "/" + name);
+            System.out.println("Saving file to " + outputDir.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(outputDir);
             PrintWriter pw = new PrintWriter(fos);
 
@@ -81,17 +75,19 @@ public class SimpleCC extends CasAnnotator_ImplBase {
             pw.println(original);
             pw.println("");
             pw.println("");
-            pw.println("TEXT - SENTENCES");
-            pw.println("Sentences: " +sentences.size());
-            pw.println(textWithSentenceAnnotation);
-            pw.println("");
-            pw.println("");
-            pw.println("TEXT - TOKENS");
-            pw.println("Tokens: " +tokens.size());
-            pw.println(textWithTokenAnnotation);
-            pw.println("TEXT - DICTIONARY");
-            pw.println("Tokens: " +dictionaryAnnotations.size());
-            pw.println(textWithDictionaryAnnotation);
+
+            while(annotationTypesIterator.hasNext()) {
+                Type annotationType = CasUtil.getType(sofaText, annotationTypesIterator.next());
+                Collection<AnnotationFS> annotations = CasUtil.select(sofaText, annotationType);
+
+                String textWithSentenceAnnotation = mergeTextAndAnnotation(onlyText, annotations);
+
+                pw.println("TEXT + " + annotationType.getName());
+                pw.println("Annotations: " +annotations.size());
+                pw.println(textWithSentenceAnnotation);
+                pw.println("");
+                pw.println("");
+            }
 
             pw.close();
         } catch (FileNotFoundException e) {
@@ -102,6 +98,7 @@ public class SimpleCC extends CasAnnotator_ImplBase {
     public void initialize(final UimaContext context) throws ResourceInitializationException {
         super.initialize(context);
         logger = context.getLogger();
+
     }
 
     private String mergeTextAndAnnotation(String input, Collection<AnnotationFS> annotations) {

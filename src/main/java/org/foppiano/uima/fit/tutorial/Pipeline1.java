@@ -15,9 +15,11 @@ import org.foppiano.uima.fit.tutorial.casConsumer.SimpleCC;
 import org.foppiano.uima.fit.tutorial.collectorReader.SimpleCR;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Hello world!
+ * Pipeline1: TEI reader-Whitespace-Dictionary-Writer to file
  */
 public class Pipeline1 {
     public static void main(String[] args) throws UIMAException, IOException {
@@ -42,15 +44,19 @@ public class Pipeline1 {
         );
 
         AnalysisEngineDescription whitespaceEngine = AnalysisEngineFactory.createEngineDescription(
-                WhitespaceTokenizer.class//,
-                //"SofaNames",
-                //new String[]{SimpleParserAE.SOFA_NAME_TEXT_ONLY}
+                WhitespaceTokenizer.class
         );
+
+        List<String> types = new ArrayList<String>();
+        types.add("org.apache.uima.SentenceAnnotation");
+        types.add("org.apache.uima.TokenAnnotation");
+        types.add("org.apache.uima.DictionaryEntry");
+
 
         AnalysisEngineDescription casConsumer = AnalysisEngineFactory.createEngineDescription(
                 SimpleCC.class,
-                SimpleCC.PARAM_OUTPUT_DIR,
-                "/Users/lf84914/development/apl/data/out"
+                SimpleCC.PARAM_OUTPUT_DIR, "out",
+                SimpleCC.PARAM_ANNOTATION_TYPES, types
         );
 
         AggregateBuilder builder = new AggregateBuilder();
