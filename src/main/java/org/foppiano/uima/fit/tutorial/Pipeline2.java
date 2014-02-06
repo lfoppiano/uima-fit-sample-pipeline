@@ -5,6 +5,8 @@ import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.conceptMapper.ConceptMapper;
+import org.apache.uima.conceptMapper.support.dictionaryResource.DictionaryResource;
+import org.apache.uima.conceptMapper.support.dictionaryResource.DictionaryResource_impl;
 import org.apache.uima.conceptMapper.support.tokenizer.OffsetTokenizer;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -20,6 +22,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.uima.fit.factory.ExternalResourceFactory.createDependencyAndBind;
 
 public class Pipeline2 {
     public static void main(String[] args) throws UIMAException, IOException {
@@ -39,6 +43,7 @@ public class Pipeline2 {
         types.add("uima.tt.TokenAnnotation");
         types.add("org.apache.uima.conceptMapper.support.tokenizer.TokenAnnotation");
         types.add("uima.tcas.DocumentAnnotation");
+        types.add("org.apache.uima.conceptMapper.DictTerm");
 
         AnalysisEngineDescription casConsumer = AnalysisEngineFactory.createEngineDescription(
                 SimpleCC.class,
@@ -71,6 +76,8 @@ public class Pipeline2 {
                 ConceptMapper.PARAM_FEATURE_LIST, new String[]{"DictCanon"},
                 ConceptMapper.PARAM_ATTRIBUTE_LIST, new String[]{"canonical"}
         );
+
+        createDependencyAndBind(conceptMapper, "DictionaryFile", DictionaryResource_impl.class, "file:testDict2.xml");
 
         AggregateBuilder builder = new AggregateBuilder();
         builder.add(preparationEngine, SimpleParserAE.SOFA_NAME_TEXT_ONLY, "newSofa");
