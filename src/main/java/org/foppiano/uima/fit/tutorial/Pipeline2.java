@@ -5,7 +5,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.conceptMapper.ConceptMapper;
-import org.apache.uima.conceptMapper.support.dictionaryResource.DictionaryResource;
 import org.apache.uima.conceptMapper.support.dictionaryResource.DictionaryResource_impl;
 import org.apache.uima.conceptMapper.support.tokenizer.OffsetTokenizer;
 import org.apache.uima.fit.factory.AggregateBuilder;
@@ -14,7 +13,7 @@ import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.foppiano.uima.fit.tutorial.annotator.SimpleParserAE;
 import org.foppiano.uima.fit.tutorial.casConsumer.SimpleCC;
-import org.foppiano.uima.fit.tutorial.collectorReader.SimpleCR;
+import org.foppiano.uima.fit.tutorial.collectorReader.LocalFileCR;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -29,10 +28,9 @@ public class Pipeline2 {
     public static void main(String[] args) throws UIMAException, IOException {
 
         /** Base components **/
-        CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(
-                SimpleCR.class,
-                SimpleCR.PARAM_SOURCE_FILE,
-                SimpleCR.class.getResource("/sampleInput.csv").getPath()
+        CollectionReaderDescription localReader = CollectionReaderFactory.createReaderDescription(
+                LocalFileCR.class,
+                LocalFileCR.PARAM_SOURCE_DIR, LocalFileCR.class.getResource("/input").getPath()
         );
 
         AnalysisEngineDescription preparationEngine = AnalysisEngineFactory.createEngineDescription(
@@ -85,6 +83,6 @@ public class Pipeline2 {
         builder.add(conceptMapper, CAS.NAME_DEFAULT_SOFA, "newSofa");
         builder.add(casConsumer, SimpleParserAE.SOFA_NAME_TEXT_ONLY, "newSofa");
 
-        SimplePipeline.runPipeline(reader, builder.createAggregateDescription());
+        SimplePipeline.runPipeline(localReader, builder.createAggregateDescription());
     }
 }

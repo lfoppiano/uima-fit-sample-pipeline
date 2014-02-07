@@ -12,7 +12,7 @@ import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.foppiano.uima.fit.tutorial.annotator.SimpleParserAE;
 import org.foppiano.uima.fit.tutorial.casConsumer.SimpleCC;
-import org.foppiano.uima.fit.tutorial.collectorReader.SimpleCR;
+import org.foppiano.uima.fit.tutorial.collectorReader.LocalFileCR;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +23,9 @@ import java.util.List;
  */
 public class Pipeline1 {
     public static void main(String[] args) throws UIMAException, IOException {
-        CollectionReaderDescription reader = CollectionReaderFactory.createReaderDescription(
-                SimpleCR.class,
-                SimpleCR.PARAM_SOURCE_FILE,
-                SimpleCR.class.getResource("/sampleInput.csv").getPath()
+        CollectionReaderDescription localReader = CollectionReaderFactory.createReaderDescription(
+                LocalFileCR.class,
+                LocalFileCR.PARAM_SOURCE_DIR, LocalFileCR.class.getResource("/input").getPath()
         );
 
         AnalysisEngineDescription preparationEngine = AnalysisEngineFactory.createEngineDescription(
@@ -35,12 +34,8 @@ public class Pipeline1 {
 
         AnalysisEngineDescription dictionaryEngine = AnalysisEngineFactory.createEngineDescription(
                 DictionaryAnnotator.class,
-                "DictionaryFiles",
-                new String[]{
-                        "dictionary.xml"
-                },
-                "InputMatchType",
-                "org.apache.uima.TokenAnnotation"
+                "DictionaryFiles", new String[]{"dictionary.xml"},
+                "InputMatchType", "org.apache.uima.TokenAnnotation"
         );
 
         AnalysisEngineDescription whitespaceEngine = AnalysisEngineFactory.createEngineDescription(
@@ -64,6 +59,6 @@ public class Pipeline1 {
         builder.add(whitespaceEngine, CAS.NAME_DEFAULT_SOFA, SimpleParserAE.SOFA_NAME_TEXT_ONLY);
         builder.add(dictionaryEngine, CAS.NAME_DEFAULT_SOFA, SimpleParserAE.SOFA_NAME_TEXT_ONLY);
 
-        SimplePipeline.runPipeline(reader, builder.createAggregateDescription(), casConsumer);
+        SimplePipeline.runPipeline(localReader, builder.createAggregateDescription(), casConsumer);
     }
 }

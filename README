@@ -1,1 +1,6 @@
-Readme
+= UIMA fit sample pipeline =
+
+This pipeline is a sample usage of UIMA fit and the apache UIMA annotators.
+The idea is to take the annotator provided by the UIMA project and integrate them in a sample project.
+
+
